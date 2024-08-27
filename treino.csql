@@ -1,0 +1,34 @@
+WITH samples_treino AS (
+  SELECT
+    sample AS sample_1,
+    Population AS population,
+    target AS target,
+    AveBedrms AS avebedrms
+    --metadata--
+  FROM (
+    SELECT * EXCEPT(ranking)
+    FROM (
+      SELECT ROW_NUMBER() OVER (partition BY mdmId ORDER BY mdmCounterForEntity DESC) ranking, *
+      FROM stg_treino_samples
+      --timestamp-- WHERE mdmCounterForEntity__DATETIME__ > SAFE.DATETIME(TIMESTAMP_MICROS(SAFE_CAST({{start_from}} AS INT64)))
+    )
+    WHERE ranking = 1
+  ) AS stg
+),
+lookup_treino AS (
+  SELECT *
+  FROM treino
+  WHERE mdmDeleted IS NULL
+  OR mdmDeleted = false
+),
+combinedSources AS (
+  SELECT * FROM samples_treino
+),
+processedData AS (
+  SELECT *
+  FROM combinedSources
+  -- WHERE
+  -- rejection rules
+)
+
+SELECT * FROM processedData
