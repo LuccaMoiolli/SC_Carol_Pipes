@@ -1,34 +1,45 @@
-WITH samples_treino AS (
-  SELECT
-    sample AS sample_1,
-    Population AS population,
-    target AS target,
-    AveBedrms AS avebedrms
-    --metadata--
-  FROM (
-    SELECT * EXCEPT(ranking)
-    FROM (
-      SELECT ROW_NUMBER() OVER (partition BY mdmId ORDER BY mdmCounterForEntity DESC) ranking, *
-      FROM stg_treino_samples
-      --timestamp-- WHERE mdmCounterForEntity__DATETIME__ > SAFE.DATETIME(TIMESTAMP_MICROS(SAFE_CAST({{start_from}} AS INT64)))
-    )
-    WHERE ranking = 1
-  ) AS stg
-),
-lookup_treino AS (
-  SELECT *
-  FROM treino
-  WHERE mdmDeleted IS NULL
-  OR mdmDeleted = false
-),
-combinedSources AS (
-  SELECT * FROM samples_treino
-),
-processedData AS (
-  SELECT *
-  FROM combinedSources
-  -- WHERE
-  -- rejection rules
-)
-
-SELECT * FROM processedData
+{
+    "defaults":
+    {
+        "prepareScripts":
+        [
+            "treino.csql"
+        ]
+    },
+    "pipelines":
+    [
+        {
+            "pipelineName": "treino_pipeline",
+            "pipelineDescription": "Pipeline pro lucca treinar carol",
+            "outputDataModelName": "treino",
+            "overlapDeltaMinutes": 0,
+            "saveToCds": false,
+            "saveToUnified": true,
+            "saveToRealtime": true,
+            "saveToBigQuery": true,
+            "sendToSubscriptions": false,
+            "cronExpressions":
+            [
+                "0 5,15,25,35,45,55 * * * ?"
+            ],
+            "timeZone": "America/Sao_Paulo",
+            "processScript": "clockinrecords.sql",
+            "sourceEntities":
+            {
+                "dataModels": [
+                     {
+                          "dataModelName": "treino"
+                     }
+                ],
+                "stagings":
+                [
+                    {
+                        "connectorName": "lucca_treino",
+                        "stagingName": "samples"
+                    }
+                ]
+            },
+            "useBatchNotification": true
+        }
+    ]
+}
