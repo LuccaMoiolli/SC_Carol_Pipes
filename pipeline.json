@@ -23,7 +23,7 @@
                 "0 5,15,25,35,45,55 * * * ?"
             ],
             "timeZone": "America/Sao_Paulo",
-            "processScript": "clockinrecords.sql",
+            "processScript": "treino.csql",
             "sourceEntities":
             {
                 "dataModels": [
