@@ -14,7 +14,6 @@
             "outputDataModelName": "treino",
             "overlapDeltaMinutes": 0,
             "saveToCds": false,
-            "saveToUnified": true,
             "saveToRealtime": true,
             "saveToBigQuery": true,
             "sendToSubscriptions": false,
