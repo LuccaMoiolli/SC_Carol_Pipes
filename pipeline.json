@@ -25,17 +25,17 @@
             "processScript": "treino.csql",
             "sourceEntities":
             {
-                "dataModels": [
-                     {
-                          "dataModelName": "treino"
-                     }
-                ],
                 "stagings":
                 [
                     {
                         "connectorName": "lucca_treino",
                         "stagingName": "samples"
                     }
+                ],
+                "dataModels": [
+                     {
+                          "dataModelName": "treino"
+                     }
                 ]
             },
             "useBatchNotification": true
